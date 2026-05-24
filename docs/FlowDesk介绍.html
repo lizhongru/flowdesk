@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowDesk</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: #1a1a2e;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ===== Nav ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 64px; padding: 0 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav-logo {
+    font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+    color: #1a1a2e;
+  }
+  .nav-logo span { color: #5b5cf7; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: #666;
+    text-decoration: none; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: #1a1a2e; }
+  .nav-cta {
+    padding: 8px 20px; border-radius: 8px;
+    background: #5b5cf7; color: #fff !important;
+    font-weight: 600; font-size: 13px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: #4a4be6; transform: translateY(-1px); }
+
+  /* ===== Hero ===== */
+  .hero {
+    padding: 160px 48px 100px;
+    text-align: center;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 600px;
+    background: linear-gradient(180deg, #f0f0ff 0%, #fff 100%);
+    z-index: -1;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 999px;
+    background: #fff; border: 1px solid #e0e0ef;
+    font-size: 13px; font-weight: 500; color: #5b5cf7;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 12px rgba(91,92,247,0.08);
+  }
+  .hero h1 {
+    font-size: clamp(48px, 7vw, 72px);
+    font-weight: 900; letter-spacing: -3px;
+    line-height: 1.05; margin-bottom: 24px;
+    color: #1a1a2e;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #5b5cf7, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 18px; color: #666;
+    max-width: 480px; margin: 0 auto 40px;
+    line-height: 1.7; font-weight: 400;
+  }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-fill {
+    background: #5b5cf7; color: #fff;
+    box-shadow: 0 4px 20px rgba(91,92,247,0.3);
+  }
+  .btn-fill:hover { background: #4a4be6; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(91,92,247,0.4); }
+  .btn-outline {
+    background: #fff; color: #1a1a2e;
+    border: 1.5px solid #ddd;
+  }
+  .btn-outline:hover { border-color: #bbb; background: #fafafa; }
+
+  /* ===== Mockup ===== */
+  .mockup-section {
+    max-width: 960px; margin: 0 auto;
+    padding: 0 24px 100px;
+  }
+  .mockup {
+    background: #f8f9fc;
+    border: 1px solid #e8e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03);
+  }
+  .m-bar {
+    height: 40px; display: flex; align-items: center; gap: 8px;
+    padding: 0 16px; background: #fff;
+    border-bottom: 1px solid #e8e8f0;
+  }
+  .m-dot { width: 12px; height: 12px; border-radius: 50%; background: #e8e8f0; }
+  .m-dot.r { background: #ff6b6b; }
+  .m-dot.y { background: #ffc145; }
+  .m-dot.g { background: #4ecb71; }
+  .m-title { margin-left: 12px; font-size: 12px; color: #999; font-weight: 500; }
+  .m-body { display: flex; height: 340px; }
+  .m-sidebar {
+    width: 56px; background: #fff;
+    border-right: 1px solid #e8e8f0;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 16px 0; gap: 4px;
+  }
+  .m-si {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #999; cursor: default;
+  }
+  .m-si.on { background: #f0f0ff; color: #5b5cf7; }
+  .m-canvas {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(circle at 1px 1px, #e0e0ef 1px, transparent 0);
+    background-size: 20px 20px;
+    padding: 40px;
+  }
+  .m-nodes { display: flex; align-items: center; }
+  .mn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; padding: 14px 20px;
+    background: #fff; border-radius: 12px;
+    border: 1.5px solid #e0e0ef;
+    min-width: 100px; text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    animation: pop 0.5s ease-out backwards;
+  }
+  .mn:nth-child(1) { animation-delay: 0s; }
+  .mn:nth-child(3) { animation-delay: 0.1s; }
+  .mn:nth-child(5) { animation-delay: 0.2s; }
+  .mn:nth-child(7) { animation-delay: 0.3s; }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .mn.t { border-color: #c4b5fd; }
+  .mn.a { border-color: #93aafd; }
+  .mn.l { border-color: #fcd34d; }
+  .mn.ok { border-color: #6ee7b7; }
+  .mn-icon { font-size: 20px; }
+  .mn-label { font-size: 11px; font-weight: 600; color: #555; }
+  .ma {
+    width: 40px; height: 2px; background: #d0d0e0; position: relative; flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .ma::after {
+    content: ''; position: absolute; right: -1px; top: -4px;
+    border-left: 7px solid #d0d0e0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+  .m-props {
+    width: 180px; background: #fff;
+    border-left: 1px solid #e8e8f0;
+    padding: 16px;
+  }
+  .m-props-t { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+  .m-pi {
+    padding: 8px 10px; border-radius: 8px; background: #f8f9fc;
+    margin-bottom: 6px;
+  }
+  .m-pi-l { font-size: 10px; color: #999; margin-bottom: 2px; }
+  .m-pi-v { font-size: 12px; font-family: 'Menlo', monospace; color: #5b5cf7; font-weight: 500; }
+
+  /* ===== Steps ===== */
+  .steps-wrap {
+    max-width: 960px; margin: 0 auto;
+    padding: 80px 24px;
+  }
+  .steps-head { text-align: center; margin-bottom: 56px; }
+  .steps-head .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    background: #f0f0ff; color: #5b5cf7;
+    font-size: 12px; font-weight: 600; margin-bottom: 12px;
+  }
+  .steps-head h2 {
+    font-size: 32px; font-weight: 800; letter-spacing: -1px;
+    color: #1a1a2e;
+  }
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .step {
+    padding: 28px 20px; border-radius: 14px;
+    background: #f8f9fc;
+    border: 1px solid #ececf4;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .step:hover { background: #fff; border-color: #d0d0ef; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+  .step-n {
+    width: 40px; height: 40px; margin: 0 auto 16px;
+    border-radius: 12px; background: #5b5cf7; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800;
+  }
+  .step-icon { font-size: 28px; margin-bottom: 12px; }
+  .step h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .step p { font-size: 12px; color: #888; line-height: 1.5; }
+
+  /* ===== Features ===== */
+  .feat-wrap {
+    background: #f8f9fc;
+    padding: 80px 24px;
+  }
+  .feat-inner { max-width: 960px; margin: 0 auto; }
+  .feat-head { text-align: center; margin-bottom: 48px; }
+  .feat-head .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    background: #fff; color: #5b5cf7;
+    font-size: 12px; font-weight: 600; margin-bottom: 12px;
+    border: 1px solid #e0e0ef;
+  }
+  .feat-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .feat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .feat {
+    padding: 28px; border-radius: 14px;
+    background: #fff;
+    border: 1px solid #ececf4;
+    transition: all 0.2s;
+  }
+  .feat:hover { border-color: #c4b5fd; box-shadow: 0 4px 16px rgba(91,92,247,0.06); }
+  .feat-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+  .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .feat p { font-size: 13px; color: #888; line-height: 1.6; }
+
+  /* ===== Nodes ===== */
+  .nodes-wrap {
+    max-width: 960px; margin: 0 auto;
+    padding: 80px 24px;
+  }
+  .nodes-head { text-align: center; margin-bottom: 48px; }
+  .nodes-head .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    background: #f0f0ff; color: #5b5cf7;
+    font-size: 12px; font-weight: 600; margin-bottom: 12px;
+  }
+  .nodes-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .node-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .nc {
+    border-radius: 14px; overflow: hidden;
+    border: 1px solid #ececf4;
+  }
+  .nc-head {
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nc-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .nc-title { font-size: 14px; font-weight: 700; }
+  .nc-count { margin-left: auto; font-size: 12px; color: #999; }
+  .nc-list { padding: 0 12px 12px; }
+  .nc-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    font-size: 13px; color: #555;
+    transition: background 0.1s;
+  }
+  .nc-item:hover { background: #f0f0ff; }
+  .nc-item span:first-child { font-size: 16px; width: 22px; text-align: center; }
+
+  /* ===== Scenarios ===== */
+  .scen-wrap {
+    background: #f8f9fc;
+    padding: 80px 24px;
+  }
+  .scen-inner { max-width: 960px; margin: 0 auto; }
+  .scen-head { text-align: center; margin-bottom: 48px; }
+  .scen-head .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    background: #fff; color: #5b5cf7;
+    font-size: 12px; font-weight: 600; margin-bottom: 12px;
+    border: 1px solid #e0e0ef;
+  }
+  .scen-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .scen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .sc {
+    padding: 24px; border-radius: 14px;
+    background: #fff; border: 1px solid #ececf4;
+    transition: all 0.2s;
+  }
+  .sc:hover { border-color: #c4b5fd; transform: translateY(-2px); }
+  .sc-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 14px;
+  }
+  .sc h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .sc p { font-size: 12px; color: #888; line-height: 1.5; }
+
+  /* ===== Stats ===== */
+  .stats {
+    display: flex; justify-content: center; gap: 64px;
+    padding: 64px 24px;
+    max-width: 960px; margin: 0 auto;
+  }
+  .si { text-align: center; }
+  .sv {
+    font-size: 40px; font-weight: 900; letter-spacing: -2px;
+    color: #1a1a2e;
+  }
+  .sv em {
+    font-style: normal;
+    background: linear-gradient(135deg, #5b5cf7, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .sl { font-size: 13px; color: #999; margin-top: 4px; font-weight: 500; }
+
+  /* ===== CTA ===== */
+  .cta {
+    text-align: center; padding: 80px 24px;
+    background: linear-gradient(180deg, #f8f9fc, #fff);
+  }
+  .cta h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+  .cta p { color: #888; font-size: 15px; margin-bottom: 32px; }
+
+  /* ===== Footer ===== */
+  footer {
+    text-align: center; padding: 32px;
+    font-size: 12px; color: #bbb;
+    border-top: 1px solid #eee;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 20px 60px; }
+    .m-body { height: 220px; }
+    .m-sidebar { width: 40px; }
+    .m-props { display: none; }
+    .m-canvas { padding: 20px; }
+    .mn { padding: 8px 12px; min-width: 70px; }
+    .ma { width: 20px; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .feat-grid { grid-template-columns: 1fr; }
+    .node-cols { grid-template-columns: 1fr; }
+    .scen-grid { grid-template-columns: 1fr; }
+    .stats { gap: 32px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="nav-logo">Flow<span>Desk</span></div>
+  <div class="nav-links">
+    <a href="#how">工作方式</a>
+    <a href="#features">特性</a>
+    <a href="#nodes">节点</a>
+    <a href="#scenarios">场景</a>
+    <a href="#start" class="nav-cta">下载</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-tag">&#9889; 桌面端 &middot; 零代码 &middot; 可视化编排</div>
+  <h1>自动化工作流<br><em>可视化编排</em></h1>
+  <p class="hero-sub">
+    拖拽节点、连线组合，编排文件处理、网络请求、定时任务等自动化流程。运行在桌面，无需编写代码。
+  </p>
+  <div class="hero-btns">
+    <button class="btn btn-fill" onclick="alert('请从项目发布页下载安装包')">&#11015; 下载安装包</button>
+    <a class="btn btn-outline" href="#how">了解更多 &rarr;</a>
+  </div>
+</div>
+
+<!-- Mockup -->
+<div class="mockup-section">
+  <div class="mockup">
+    <div class="m-bar">
+      <div class="m-dot r"></div>
+      <div class="m-dot y"></div>
+      <div class="m-dot g"></div>
+      <div class="m-title">FlowDesk</div>
+    </div>
+    <div class="m-body">
+      <div class="m-sidebar">
+        <div class="m-si on">&#9673;</div>
+        <div class="m-si">&#9998;</div>
+        <div class="m-si">&#128203;</div>
+        <div class="m-si">&#9881;</div>
+      </div>
+      <div class="m-canvas">
+        <div class="m-nodes">
+          <div class="mn t">
+            <span class="mn-icon">&#9200;</span>
+            <span class="mn-label">定时触发</span>
+          </div>
+          <div class="ma"></div>
+          <div class="mn a">
+            <span class="mn-icon">&#127760;</span>
+            <span class="mn-label">HTTP 请求</span>
+          </div>
+          <div class="ma"></div>
+          <div class="mn l">
+            <span class="mn-icon">&#128257;</span>
+            <span class="mn-label">条件判断</span>
+          </div>
+          <div class="ma"></div>
+          <div class="mn ok">
+            <span class="mn-icon">&#128276;</span>
+            <span class="mn-label">发送通知</span>
+          </div>
+        </div>
+      </div>
+      <div class="m-props">
+        <div class="m-props-t">节点属性</div>
+        <div class="m-pi">
+          <div class="m-pi-l">表达式</div>
+          <div class="m-pi-v">0 9 * * *</div>
+        </div>
+        <div class="m-pi">
+          <div class="m-pi-l">时区</div>
+          <div class="m-pi-v">Asia/Shanghai</div>
+        </div>
+        <div class="m-pi">
+          <div class="m-pi-l">状态</div>
+          <div class="m-pi-v" style="color:#34d399;">&#9679; 就绪</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Steps -->
+<div class="steps-wrap" id="how">
+  <div class="steps-head">
+    <div class="tag">工作方式</div>
+    <h2>四步完成自动化</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-icon">&#127912;</div>
+      <h3>拖入节点</h3>
+      <p>从左侧面板拖拽触发器、动作、逻辑节点到画布</p>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-icon">&#128279;</div>
+      <h3>连线组合</h3>
+      <p>将节点输出端口连接到下一个节点的输入端口</p>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-icon">&#9881;</div>
+      <h3>配置参数</h3>
+      <p>在右侧面板设置每个节点的参数和条件</p>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-icon">&#9654;</div>
+      <h3>运行监控</h3>
+      <p>点击运行，实时查看每个节点的执行状态</p>
+    </div>
+  </div>
+</div>
+
+<!-- Features -->
+<div class="feat-wrap" id="features">
+  <div class="feat-inner">
+    <div class="feat-head">
+      <div class="tag">核心特性</div>
+      <h2>为效率而设计</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="feat-icon" style="background:#f0f0ff;color:#5b5cf7;">&#128300;</div>
+        <h3>可视化画布</h3>
+        <p>拖拽式编辑器，支持框选、复制粘贴、缩放平移，操作直觉自然。</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#f0f0ff;color:#5b5cf7;">&#9889;</div>
+        <h3>多种触发方式</h3>
+        <p>手动执行、Cron 定时、文件监听、全局快捷键，按需选择。</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#ecfdf5;color:#10b981;">&#128200;</div>
+        <h3>实时状态追踪</h3>
+        <p>节点执行时实时高亮状态，侧边栏查看输入输出详情。</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#fffbeb;color:#f59e0b;">&#128257;</div>
+        <h3>逻辑控制</h3>
+        <p>条件分支、循环遍历、变量设置、Try-Catch、子工作流。</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#fef2f2;color:#ef4444;">&#128203;</div>
+        <h3>模板系统</h3>
+        <p>内置常用模板一键创建；支持导入导出 JSON，方便分享备份。</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#faf5ff;color:#8b5cf6;">&#128276;</div>
+        <h3>通知与日志</h3>
+        <p>执行完成自动推送通知，完整历史可追溯，按状态筛选。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nodes -->
+<div class="nodes-wrap" id="nodes">
+  <div class="nodes-head">
+    <div class="tag">节点类型</div>
+    <h2>18+ 内置节点</h2>
+  </div>
+  <div class="node-cols">
+    <div class="nc">
+      <div class="nc-head" style="background:#f5f3ff;">
+        <div class="nc-dot" style="background:#8b5cf6;"></div>
+        <div class="nc-title">触发器</div>
+        <div class="nc-count">4 种</div>
+      </div>
+      <div class="nc-list">
+        <div class="nc-item"><span>&#9654;</span> 手动触发</div>
+        <div class="nc-item"><span>&#9200;</span> Cron 定时</div>
+        <div class="nc-item"><span>&#128065;</span> 文件监听</div>
+        <div class="nc-item"><span>&#9000;</span> 快捷键触发</div>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="nc-head" style="background:#eef2ff;">
+        <div class="nc-dot" style="background:#5b5cf7;"></div>
+        <div class="nc-title">动作</div>
+        <div class="nc-count">8 种</div>
+      </div>
+      <div class="nc-list">
+        <div class="nc-item"><span>&#127760;</span> HTTP 请求</div>
+        <div class="nc-item"><span>&#128276;</span> 系统通知</div>
+        <div class="nc-item"><span>&#128196;</span> 文件操作</div>
+        <div class="nc-item"><span>&#128187;</span> 执行命令</div>
+        <div class="nc-item"><span>&#128232;</span> 发送邮件</div>
+        <div class="nc-item"><span>&#128451;</span> 数据库查询</div>
+        <div class="nc-item"><span>&#128190;</span> 剪贴板</div>
+        <div class="nc-item"><span>&#9201;</span> 延时等待</div>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="nc-head" style="background:#fffbeb;">
+        <div class="nc-dot" style="background:#f59e0b;"></div>
+        <div class="nc-title">逻辑</div>
+        <div class="nc-count">6 种</div>
+      </div>
+      <div class="nc-list">
+        <div class="nc-item"><span>&#128257;</span> 条件判断</div>
+        <div class="nc-item"><span>&#128258;</span> 循环遍历</div>
+        <div class="nc-item"><span>&#128221;</span> 变量设置</div>
+        <div class="nc-item"><span>&#128260;</span> 数据转换</div>
+        <div class="nc-item"><span>&#128736;</span> Try-Catch</div>
+        <div class="nc-item"><span>&#128260;</span> 子工作流</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scenarios -->
+<div class="scen-wrap" id="scenarios">
+  <div class="scen-inner">
+    <div class="scen-head">
+      <div class="tag">应用场景</div>
+      <h2>解决真实问题</h2>
+    </div>
+    <div class="scen-grid">
+      <div class="sc">
+        <div class="sc-icon" style="background:#f5f3ff;color:#8b5cf6;">&#128193;</div>
+        <h3>文件自动归档</h3>
+        <p>监听文件夹，新文件自动分类移动，发送通知告知结果。</p>
+      </div>
+      <div class="sc">
+        <div class="sc-icon" style="background:#eef2ff;color:#5b5cf7;">&#128200;</div>
+        <h3>接口健康监控</h3>
+        <p>定时请求 API，异常时自动邮件告警，防患于未然。</p>
+      </div>
+      <div class="sc">
+        <div class="sc-icon" style="background:#ecfdf5;color:#10b981;">&#128202;</div>
+        <h3>批量数据处理</h3>
+        <p>数据库查询 → 循环遍历 → 格式转换 → 写回结果。</p>
+      </div>
+      <div class="sc">
+        <div class="sc-icon" style="background:#fffbeb;color:#f59e0b;">&#128640;</div>
+        <h3>一键部署流程</h3>
+        <p>拉代码、构建、上传、重启，编排为工作流一键触发。</p>
+      </div>
+      <div class="sc">
+        <div class="sc-icon" style="background:#fef2f2;color:#ef4444;">&#128465;</div>
+        <h3>定期清理日志</h3>
+        <p>每天凌晨自动清理过期日志，释放磁盘空间。</p>
+      </div>
+      <div class="sc">
+        <div class="sc-icon" style="background:#faf5ff;color:#8b5cf6;">&#128276;</div>
+        <h3>定时消息推送</h3>
+        <p>按 Cron 表达式定时发送邮件或系统通知。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="si">
+    <div class="sv"><em>18+</em></div>
+    <div class="sl">内置节点</div>
+  </div>
+  <div class="si">
+    <div class="sv"><em>4</em></div>
+    <div class="sl">触发方式</div>
+  </div>
+  <div class="si">
+    <div class="sv"><em>~80</em>MB</div>
+    <div class="sl">安装体积</div>
+  </div>
+  <div class="si">
+    <div class="sv"><em>0</em></div>
+    <div class="sl">代码量</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta" id="start">
+  <h2>开始你的第一个工作流</h2>
+  <p>下载安装，选择模板，三分钟完成第一个自动化流程</p>
+  <button class="btn btn-fill" onclick="alert('请从项目发布页下载安装包')">&#11015; 下载 FlowDesk</button>
+</div>
+
+<footer>
+  FlowDesk &copy; 2026 &middot; Built with Electron + React + TypeScript
+</footer>
+
+</body>
+</html>

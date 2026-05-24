@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowDesk</title>
+    <script>
+      // 在 CSS 和 React 加载前应用主题，避免闪烁
+      (function() {
+        var t = localStorage.getItem('flowdesk-theme');
+        if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+        else if (t === 'system') {
+          if (window.matchMedia('(prefers-color-scheme: light)').matches)
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { background: #0f1117; height: 100%; overflow: hidden; }
+      [data-theme="light"] html, [data-theme="light"] body { background: #f5f6fa; }
+      #splash {
+        position: fixed; inset: 0; z-index: 9999;
+        background: #0f1117;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 24px;
+        transition: opacity 0.4s ease-out;
+      }
+      [data-theme="light"] #splash { background: #f5f6fa; }
+      #splash.fade-out { opacity: 0; pointer-events: none; }
+      .splash-logo {
+        width: 64px; height: 64px;
+        background: #4f6ef7;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; color: #fff;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      .splash-text {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        font-size: 14px; color: #8b8fa4;
+        letter-spacing: 2px;
+      }
+      [data-theme="light"] .splash-text { color: #5c6078; }
+      .splash-bar {
+        width: 120px; height: 3px;
+        background: #2a2d3e;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      [data-theme="light"] .splash-bar { background: #d8dae0; }
+      .splash-bar::after {
+        content: '';
+        display: block;
+        width: 40%; height: 100%;
+        background: #4f6ef7;
+        border-radius: 2px;
+        animation: slide 1.2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.08); opacity: 0.85; }
+      }
+      @keyframes slide {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(200%); }
+        100% { transform: translateX(-100%); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <div class="splash-logo">⚡</div>
+      <div class="splash-text">FLOWDESK</div>
+      <div class="splash-bar"></div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+appId: com.flowdesk.app
+productName: FlowDesk
+directories:
+  output: release
+files:
+  - out/**/*
+  - "!out/types-*"
+  - "!node_modules/**/*"
+  - "node_modules/better-sqlite3/lib/**/*"
+  - "node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+  - "node_modules/better-sqlite3/package.json"
+  - "node_modules/bindings/**/*"
+  - "node_modules/file-uri-to-path/**/*"
+asar: true
+asarUnpack:
+  - "node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+win:
+  target:
+    - nsis
+  icon: resources/icon.png
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
