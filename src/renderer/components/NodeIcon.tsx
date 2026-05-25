@@ -2,7 +2,7 @@ import {
   Play, Clock, Eye, Keyboard,
   FolderSync, Terminal, Globe, Clipboard, Bell, Timer,
   GitBranch, Repeat, Variable, ShieldAlert, Workflow,
-  RotateCcw, Shuffle, Mail, Database,
+  RotateCcw, Shuffle, Mail, Database, Power, Wifi,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 
@@ -10,7 +10,7 @@ const iconMap: Record<string, ComponentType<{ size?: number; className?: string;
   Play, Clock, Eye, Keyboard,
   FolderSync, Terminal, Globe, Clipboard, Bell, Timer,
   GitBranch, Repeat, Variable, ShieldAlert, Workflow,
-  RotateCcw, Shuffle, Mail, Database,
+  RotateCcw, Shuffle, Mail, Database, Power, Wifi,
 };
 
 interface NodeIconProps {

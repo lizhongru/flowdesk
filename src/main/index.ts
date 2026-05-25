@@ -5,6 +5,7 @@ import { registerAllIPC } from './ipc';
 import { setMainWindowGetter } from './ipc/execution';
 import { restoreSchedulers, destroyAllSchedulers } from './engine/scheduler';
 import { restoreWatchers, destroyAllWatchers } from './engine/watcher';
+import { restoreStartupWorkflows } from './engine/startup-runner';
 import { createTray } from './tray';
 
 // Chromium 内存优化
@@ -88,6 +89,9 @@ app.whenReady().then(async () => {
   // 恢复定时任务和文件监听
   await restoreSchedulers();
   await restoreWatchers();
+
+  // 执行启动工作流
+  await restoreStartupWorkflows();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

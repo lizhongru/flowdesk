@@ -151,3 +151,14 @@ export function getEnabledCronWorkflows(): Workflow[] {
     .map(rowToWorkflow)
     .filter(w => w.nodes.some(n => (n.data.nodeType as string) === 'cron'));
 }
+
+export function getEnabledStartupWorkflows(): Workflow[] {
+  const db = getDatabase();
+  const rows = db.prepare(`
+    SELECT * FROM workflows WHERE enabled = 1
+  `).all() as WorkflowRow[];
+
+  return rows
+    .map(rowToWorkflow)
+    .filter(w => w.nodes.some(n => (n.data.nodeType as string) === 'startup'));
+}

@@ -3,6 +3,21 @@ import type { NodeDefinition } from '../../../shared/types';
 export const nodeDefinitions: NodeDefinition[] = [
   // ============ 触发器 ============
   {
+    type: 'startup',
+    category: 'trigger',
+    label: '启动触发',
+    description: 'FlowDesk 启动时自动触发',
+    icon: 'Power',
+    color: '#818cf8',
+    inputs: [],
+    outputs: [{ id: 'out', label: '输出', dataType: 'any' }],
+    outputFields: [
+      { key: 'triggeredAt', label: '触发时间', type: 'string' },
+    ],
+    defaultData: {},
+    configSchema: [],
+  },
+  {
     type: 'manual',
     category: 'trigger',
     label: '手动触发',
@@ -441,6 +456,27 @@ export const nodeDefinitions: NodeDefinition[] = [
       { key: 'database', label: '数据库名', type: 'text' },
       { key: 'query', label: 'SQL 查询', type: 'textarea', required: true },
       { key: 'params', label: '查询参数', type: 'json', placeholder: '["value1", "value2"]' },
+    ],
+  },
+  {
+    type: 'wifi-login',
+    category: 'action',
+    label: 'WiFi 登录',
+    description: '自动登录 WiFi Portal 认证页面',
+    icon: 'Wifi',
+    color: '#4f6ef7',
+    inputs: [{ id: 'in', label: '输入', dataType: 'any' }],
+    outputs: [{ id: 'out', label: '输出', dataType: 'object' }],
+    outputFields: [
+      { key: 'success', label: '是否成功', type: 'boolean' },
+      { key: 'message', label: '消息', type: 'string' },
+      { key: 'userName', label: '用户名', type: 'string' },
+    ],
+    defaultData: { portalUrl: 'http://1.1.1.3/ac_portal', userName: '', password: '' },
+    configSchema: [
+      { key: 'portalUrl', label: 'Portal 地址', type: 'text', required: true, placeholder: 'http://1.1.1.3/ac_portal' },
+      { key: 'userName', label: '用户名', type: 'text', required: true },
+      { key: 'password', label: '密码', type: 'text', required: true },
     ],
   },
 ];

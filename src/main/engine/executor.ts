@@ -54,6 +54,7 @@ export async function executeWorkflow(
     cron: '定时触发',
     'file-watch': '文件监听',
     hotkey: '快捷键触发',
+    startup: '启动触发',
   };
   context.log('system', 'info', `▶ 执行工作流「${workflow.name}」— ${triggerLabels[triggerType] || triggerType}`);
 
