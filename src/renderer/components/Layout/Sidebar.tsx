@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Workflow, ScrollText, Settings } from 'lucide-react';
+import iconDark from '../../assets/icon.png';
+import iconLight from '../../assets/icon-light.png';
 
 interface SidebarProps {
   activePage: string;
@@ -6,6 +9,18 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
+  const [isLight, setIsLight] = useState(
+    document.documentElement.getAttribute('data-theme') === 'light'
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.getAttribute('data-theme') === 'light');
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  }, []);
+
   const items = [
     { id: 'home', label: '工作流', icon: Workflow },
     { id: 'history', label: '执行历史', icon: ScrollText },
@@ -35,6 +50,12 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
           </button>
         );
       })}
+      <div className="flex-1" />
+      <img
+        src={isLight ? iconLight : iconDark}
+        alt="FlowDesk"
+        className="w-7 h-7 mb-1 rounded-md"
+      />
     </div>
   );
 }

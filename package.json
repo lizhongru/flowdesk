@@ -1,5 +1,6 @@
 {
   "name": "flowdesk",
+  "productName": "FlowDesk",
   "version": "0.1.0",
   "description": "桌面自动化工作流引擎",
   "main": "out/main/index.js",
