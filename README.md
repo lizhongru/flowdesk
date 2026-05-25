@@ -18,7 +18,7 @@
 
 ## 下载
 
-前往 [Releases](https://github.com/你的用户名/flowdesk/releases) 下载最新版本安装包。
+前往 [Releases](https://github.com/lizhongru/flowdesk/releases) 下载最新版本安装包。
 
 ## 技术栈
 
