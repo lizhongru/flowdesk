@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { ChevronDown, ChevronRight, Clock, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Clock, Loader2, Copy, Check } from 'lucide-react';
 import type { ExecutionHistoryEntry, ExecutionLog, NodeExecutionLog } from '../../../shared/types';
 
 const STATUS_TABS = [
@@ -203,7 +203,14 @@ export default function HistoryPage() {
                         <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>加载中...</span>
                       </div>
                     ) : detail ? (
-                      <NodeDetails nodes={detail.nodeLogs} />
+                      <div className="flex gap-2">
+                        <div className="shrink-0 pt-0.5">
+                          <CopyDetailButton detail={detail} item={item} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <NodeDetails nodes={detail.nodeLogs} />
+                        </div>
+                      </div>
                     ) : (
                       <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>无详情</span>
                     )}
@@ -248,6 +255,46 @@ export default function HistoryPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function CopyDetailButton({ detail, item }: { detail: ExecutionLog; item: ExecutionHistoryEntry }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    const lines: string[] = [];
+    lines.push(`工作流: ${item.workflowName}`);
+    lines.push(`状态: ${statusLabels[item.status] || item.status}  触发: ${triggerLabels[item.triggerType] || item.triggerType}  耗时: ${formatDuration(item.duration)}`);
+    lines.push(`时间: ${formatTime(item.startedAt)}`);
+    lines.push('');
+    if (detail.nodeLogs?.length) {
+      for (const node of detail.nodeLogs) {
+        const dur = node.duration != null ? formatDuration(node.duration) : '-';
+        lines.push(`[${statusLabels[node.status] || node.status}] ${node.nodeType} (${node.nodeId}) ${dur}`);
+        if (node.error) lines.push(`  错误: ${node.error}`);
+        if (node.output != null) lines.push(`  输出: ${typeof node.output === 'string' ? node.output : JSON.stringify(node.output, null, 2)}`);
+        if (node.input != null) lines.push(`  输入: ${typeof node.input === 'string' ? node.input : JSON.stringify(node.input, null, 2)}`);
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch { /* ignore */ }
+  };
+
+  return (
+    <button
+      onClick={copy}
+      className="w-6 h-6 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
+      title="复制日志"
+    >
+      {copied ? (
+        <Check size={12} style={{ color: 'var(--success)' }} />
+      ) : (
+        <Copy size={12} style={{ color: 'var(--text-muted)' }} />
+      )}
+    </button>
   );
 }
 

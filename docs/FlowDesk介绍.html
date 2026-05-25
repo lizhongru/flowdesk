@@ -9,380 +9,636 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    color: #1a1a2e;
-    background: #fff;
+    color: #f5f5f7;
+    background: #000;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
 
-  /* ===== Nav ===== */
+  /* ===== Nav (Floating) ===== */
   .nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    height: 64px; padding: 0 48px;
+    position: fixed; top: 16px; left: 16px; right: 16px; z-index: 100;
+    height: 52px; padding: 0 32px;
     display: flex; align-items: center; justify-content: space-between;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(20px) saturate(1.2);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
   }
   .nav-logo {
-    font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
-    color: #1a1a2e;
+    font-size: 18px; font-weight: 700; letter-spacing: -0.3px;
+    color: #f5f5f7;
   }
-  .nav-logo span { color: #5b5cf7; }
-  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
   .nav-links a {
-    font-size: 14px; font-weight: 500; color: #666;
-    text-decoration: none; transition: color 0.15s;
+    font-size: 12px; font-weight: 400; color: #d2d2d7;
+    text-decoration: none; transition: color 0.2s;
+    cursor: pointer;
   }
-  .nav-links a:hover { color: #1a1a2e; }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a:focus-visible {
+    outline: 2px solid #2997ff;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
   .nav-cta {
-    padding: 8px 20px; border-radius: 8px;
-    background: #5b5cf7; color: #fff !important;
-    font-weight: 600; font-size: 13px;
-    transition: all 0.2s;
+    padding: 6px 16px; border-radius: 980px;
+    background: #2997ff; color: #fff !important;
+    font-weight: 500; font-size: 12px;
+    transition: background 0.2s;
   }
-  .nav-cta:hover { background: #4a4be6; transform: translateY(-1px); }
+  .nav-cta:hover { background: #0077ed; }
+
+  /* ===== Section base ===== */
+  .section {
+    position: relative;
+    overflow: hidden;
+  }
+  .section-dark {
+    background: #000;
+    color: #f5f5f7;
+  }
+  .section-light {
+    background: #f5f5f7;
+    color: #1d1d1f;
+  }
+  .section-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Typography ===== */
+  .headline {
+    font-size: clamp(40px, 7vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+  .headline-sm {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .subhead {
+    font-size: clamp(17px, 2.2vw, 21px);
+    font-weight: 400;
+    line-height: 1.6;
+    color: #86868b;
+  }
+  .subhead-dark {
+    color: #6e6e73;
+  }
+  .gradient-text {
+    background: linear-gradient(90deg, #2997ff, #a78bfa, #e879f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gradient-text-warm {
+    background: linear-gradient(90deg, #ff6b6b, #ffa94d, #ffd43b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== SVG Icon utility ===== */
+  .icon {
+    width: 24px; height: 24px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+  .icon-sm { width: 18px; height: 18px; }
+  .icon-lg { width: 28px; height: 28px; }
+
+  /* ===== Scroll animations ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
 
   /* ===== Hero ===== */
   .hero {
-    padding: 160px 48px 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    padding: 120px 24px 80px;
+    background: #000;
     position: relative;
   }
-  .hero::before {
+  .hero::after {
     content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 600px;
-    background: linear-gradient(180deg, #f0f0ff 0%, #fff 100%);
-    z-index: -1;
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 200px;
+    background: linear-gradient(to bottom, transparent, #101010);
+    pointer-events: none;
   }
-  .hero-tag {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 16px; border-radius: 999px;
-    background: #fff; border: 1px solid #e0e0ef;
-    font-size: 13px; font-weight: 500; color: #5b5cf7;
-    margin-bottom: 32px;
-    box-shadow: 0 2px 12px rgba(91,92,247,0.08);
+  .hero-eyebrow {
+    font-size: 17px;
+    font-weight: 600;
+    color: #86868b;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
   }
   .hero h1 {
-    font-size: clamp(48px, 7vw, 72px);
-    font-weight: 900; letter-spacing: -3px;
-    line-height: 1.05; margin-bottom: 24px;
-    color: #1a1a2e;
-  }
-  .hero h1 em {
-    font-style: normal;
-    background: linear-gradient(135deg, #5b5cf7, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: clamp(56px, 10vw, 96px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.04;
+    margin-bottom: 24px;
+    color: #f5f5f7;
   }
   .hero-sub {
-    font-size: 18px; color: #666;
-    max-width: 480px; margin: 0 auto 40px;
-    line-height: 1.7; font-weight: 400;
+    font-size: clamp(19px, 2.5vw, 24px);
+    color: #86868b;
+    max-width: 560px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+    font-weight: 400;
   }
-  .hero-btns { display: flex; gap: 12px; justify-content: center; }
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 28px; border-radius: 10px;
-    font-size: 15px; font-weight: 600;
+    padding: 12px 28px; border-radius: 980px;
+    font-size: 17px; font-weight: 400;
     cursor: pointer; border: none; text-decoration: none;
     transition: all 0.2s;
   }
-  .btn-fill {
-    background: #5b5cf7; color: #fff;
-    box-shadow: 0 4px 20px rgba(91,92,247,0.3);
+  .btn:focus-visible {
+    outline: 2px solid #2997ff;
+    outline-offset: 4px;
   }
-  .btn-fill:hover { background: #4a4be6; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(91,92,247,0.4); }
-  .btn-outline {
-    background: #fff; color: #1a1a2e;
-    border: 1.5px solid #ddd;
+  .btn-blue {
+    background: #2997ff; color: #fff;
   }
-  .btn-outline:hover { border-color: #bbb; background: #fafafa; }
+  .btn-blue:hover { background: #0077ed; }
+  .btn-ghost {
+    background: transparent; color: #2997ff;
+    border: 1px solid #2997ff;
+  }
+  .btn-ghost:hover { background: #2997ff; color: #fff; }
 
-  /* ===== Mockup ===== */
+  /* ===== Mockup section (dark) ===== */
   .mockup-section {
-    max-width: 960px; margin: 0 auto;
-    padding: 0 24px 100px;
+    padding: 80px 24px 120px;
+    background: #101010;
+  }
+  .mockup-container {
+    max-width: 1000px;
+    margin: 0 auto;
   }
   .mockup {
-    background: #f8f9fc;
-    border: 1px solid #e8e8f0;
-    border-radius: 16px;
+    background: #1d1d1f;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04),
+                0 40px 80px rgba(0,0,0,0.6);
   }
   .m-bar {
-    height: 40px; display: flex; align-items: center; gap: 8px;
-    padding: 0 16px; background: #fff;
-    border-bottom: 1px solid #e8e8f0;
+    height: 38px; display: flex; align-items: center; gap: 8px;
+    padding: 0 14px; background: #2a2a2c;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
-  .m-dot { width: 12px; height: 12px; border-radius: 50%; background: #e8e8f0; }
-  .m-dot.r { background: #ff6b6b; }
-  .m-dot.y { background: #ffc145; }
-  .m-dot.g { background: #4ecb71; }
-  .m-title { margin-left: 12px; font-size: 12px; color: #999; font-weight: 500; }
-  .m-body { display: flex; height: 340px; }
+  .m-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .m-dot.r { background: #ff5f57; }
+  .m-dot.y { background: #febc2e; }
+  .m-dot.g { background: #28c840; }
+  .m-title { margin-left: 12px; font-size: 12px; color: #6e6e73; font-weight: 500; }
+  .m-body { display: flex; height: 380px; }
   .m-sidebar {
-    width: 56px; background: #fff;
-    border-right: 1px solid #e8e8f0;
+    width: 52px; background: #1d1d1f;
+    border-right: 1px solid rgba(255,255,255,0.06);
     display: flex; flex-direction: column; align-items: center;
-    padding: 16px 0; gap: 4px;
+    padding: 14px 0; gap: 4px;
   }
   .m-si {
-    width: 36px; height: 36px; border-radius: 10px;
+    width: 34px; height: 34px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 14px; color: #999; cursor: default;
+    cursor: default;
   }
-  .m-si.on { background: #f0f0ff; color: #5b5cf7; }
+  .m-si.on { background: rgba(41,151,255,0.15); color: #2997ff; }
+  .m-si .icon { width: 16px; height: 16px; color: #6e6e73; }
+  .m-si.on .icon { color: #2997ff; }
   .m-canvas {
     flex: 1; display: flex; align-items: center; justify-content: center;
     background:
-      radial-gradient(circle at 1px 1px, #e0e0ef 1px, transparent 0);
-    background-size: 20px 20px;
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 24px 24px;
     padding: 40px;
   }
   .m-nodes { display: flex; align-items: center; }
   .mn {
     display: flex; flex-direction: column; align-items: center;
-    gap: 6px; padding: 14px 20px;
-    background: #fff; border-radius: 12px;
-    border: 1.5px solid #e0e0ef;
+    gap: 6px; padding: 14px 22px;
+    background: #2a2a2c; border-radius: 14px;
+    border: 1.5px solid rgba(255,255,255,0.1);
     min-width: 100px; text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    animation: pop 0.5s ease-out backwards;
+    animation: pop 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
   }
-  .mn:nth-child(1) { animation-delay: 0s; }
-  .mn:nth-child(3) { animation-delay: 0.1s; }
-  .mn:nth-child(5) { animation-delay: 0.2s; }
-  .mn:nth-child(7) { animation-delay: 0.3s; }
+  .mn:nth-child(1) { animation-delay: 0.1s; }
+  .mn:nth-child(3) { animation-delay: 0.2s; }
+  .mn:nth-child(5) { animation-delay: 0.3s; }
+  .mn:nth-child(7) { animation-delay: 0.4s; }
   @keyframes pop {
-    from { opacity: 0; transform: scale(0.85); }
+    from { opacity: 0; transform: scale(0.8); }
     to { opacity: 1; transform: scale(1); }
   }
-  .mn.t { border-color: #c4b5fd; }
-  .mn.a { border-color: #93aafd; }
-  .mn.l { border-color: #fcd34d; }
-  .mn.ok { border-color: #6ee7b7; }
-  .mn-icon { font-size: 20px; }
-  .mn-label { font-size: 11px; font-weight: 600; color: #555; }
+  .mn.t { border-color: rgba(168,85,247,0.5); }
+  .mn.a { border-color: rgba(41,151,255,0.5); }
+  .mn.l { border-color: rgba(255,159,10,0.5); }
+  .mn.ok { border-color: rgba(48,209,88,0.5); }
+  .mn-icon { display: flex; align-items: center; justify-content: center; }
+  .mn-icon .icon { width: 22px; height: 22px; }
+  .mn.t .mn-icon { color: #a855f7; }
+  .mn.a .mn-icon { color: #2997ff; }
+  .mn.l .mn-icon { color: #ff9f0a; }
+  .mn.ok .mn-icon { color: #30d158; }
+  .mn-label { font-size: 11px; font-weight: 600; color: #a1a1a6; }
   .ma {
-    width: 40px; height: 2px; background: #d0d0e0; position: relative; flex-shrink: 0;
+    width: 44px; height: 2px; background: rgba(255,255,255,0.15); position: relative; flex-shrink: 0;
     animation: pulse 2s ease-in-out infinite;
   }
   @keyframes pulse {
-    0%, 100% { opacity: 0.4; }
+    0%, 100% { opacity: 0.3; }
     50% { opacity: 1; }
   }
   .ma::after {
     content: ''; position: absolute; right: -1px; top: -4px;
-    border-left: 7px solid #d0d0e0;
+    border-left: 7px solid rgba(255,255,255,0.2);
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
   }
   .m-props {
-    width: 180px; background: #fff;
-    border-left: 1px solid #e8e8f0;
+    width: 180px; background: #1d1d1f;
+    border-left: 1px solid rgba(255,255,255,0.06);
     padding: 16px;
   }
-  .m-props-t { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+  .m-props-t {
+    font-size: 10px; font-weight: 600; color: #6e6e73;
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;
+  }
   .m-pi {
-    padding: 8px 10px; border-radius: 8px; background: #f8f9fc;
+    padding: 8px 10px; border-radius: 8px; background: #2a2a2c;
     margin-bottom: 6px;
   }
-  .m-pi-l { font-size: 10px; color: #999; margin-bottom: 2px; }
-  .m-pi-v { font-size: 12px; font-family: 'Menlo', monospace; color: #5b5cf7; font-weight: 500; }
+  .m-pi-l { font-size: 10px; color: #6e6e73; margin-bottom: 2px; }
+  .m-pi-v { font-size: 12px; font-family: 'SF Mono', 'Menlo', monospace; color: #2997ff; font-weight: 500; }
 
-  /* ===== Steps ===== */
-  .steps-wrap {
-    max-width: 960px; margin: 0 auto;
-    padding: 80px 24px;
+  /* ===== How it works ===== */
+  .how-section {
+    padding: 120px 24px;
+    background: #101010;
   }
-  .steps-head { text-align: center; margin-bottom: 56px; }
-  .steps-head .tag {
-    display: inline-block; padding: 4px 12px; border-radius: 6px;
-    background: #f0f0ff; color: #5b5cf7;
-    font-size: 12px; font-weight: 600; margin-bottom: 12px;
+  .how-head {
+    text-align: center;
+    margin-bottom: 64px;
   }
-  .steps-head h2 {
-    font-size: 32px; font-weight: 800; letter-spacing: -1px;
-    color: #1a1a2e;
+  .how-head .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
   }
   .steps {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    max-width: 980px;
+    margin: 0 auto;
   }
   .step {
-    padding: 28px 20px; border-radius: 14px;
-    background: #f8f9fc;
-    border: 1px solid #ececf4;
+    padding: 48px 24px;
+    background: #1d1d1f;
     text-align: center;
-    transition: all 0.2s;
+    position: relative;
+    transition: background 0.2s;
+    cursor: default;
   }
-  .step:hover { background: #fff; border-color: #d0d0ef; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-  .step-n {
-    width: 40px; height: 40px; margin: 0 auto 16px;
-    border-radius: 12px; background: #5b5cf7; color: #fff;
+  .step:hover { background: #2a2a2c; }
+  .step-num {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 20px;
+    background: linear-gradient(180deg, #2997ff, rgba(41,151,255,0.2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .step-icon {
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 800;
+    margin-bottom: 16px;
   }
-  .step-icon { font-size: 28px; margin-bottom: 12px; }
-  .step h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-  .step p { font-size: 12px; color: #888; line-height: 1.5; }
+  .step-icon .icon { width: 28px; height: 28px; color: #86868b; }
+  .step h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #f5f5f7;
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 13px;
+    color: #86868b;
+    line-height: 1.6;
+  }
 
-  /* ===== Features ===== */
-  .feat-wrap {
-    background: #f8f9fc;
-    padding: 80px 24px;
+  /* ===== Features (dark with gradient cards) ===== */
+  .features-section {
+    padding: 120px 24px;
+    background: #000;
   }
-  .feat-inner { max-width: 960px; margin: 0 auto; }
-  .feat-head { text-align: center; margin-bottom: 48px; }
-  .feat-head .tag {
-    display: inline-block; padding: 4px 12px; border-radius: 6px;
-    background: #fff; color: #5b5cf7;
-    font-size: 12px; font-weight: 600; margin-bottom: 12px;
-    border: 1px solid #e0e0ef;
+  .features-head {
+    text-align: center;
+    margin-bottom: 64px;
   }
-  .feat-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .features-head .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
   .feat-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 980px;
+    margin: 0 auto;
   }
   .feat {
-    padding: 28px; border-radius: 14px;
-    background: #fff;
-    border: 1px solid #ececf4;
-    transition: all 0.2s;
+    padding: 36px 28px;
+    border-radius: 20px;
+    background: #1d1d1f;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
   }
-  .feat:hover { border-color: #c4b5fd; box-shadow: 0 4px 16px rgba(91,92,247,0.06); }
+  .feat:hover {
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
   .feat-icon {
-    width: 44px; height: 44px; border-radius: 12px;
+    width: 48px; height: 48px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px; margin-bottom: 16px;
+    margin-bottom: 20px;
   }
-  .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-  .feat p { font-size: 13px; color: #888; line-height: 1.6; }
+  .feat-icon .icon { width: 22px; height: 22px; }
+  .feat h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #f5f5f7;
+    margin-bottom: 8px;
+  }
+  .feat p {
+    font-size: 14px;
+    color: #86868b;
+    line-height: 1.6;
+  }
 
-  /* ===== Nodes ===== */
-  .nodes-wrap {
-    max-width: 960px; margin: 0 auto;
-    padding: 80px 24px;
+  /* ===== Nodes showcase ===== */
+  .nodes-section {
+    padding: 120px 24px;
+    background: #101010;
   }
-  .nodes-head { text-align: center; margin-bottom: 48px; }
-  .nodes-head .tag {
-    display: inline-block; padding: 4px 12px; border-radius: 6px;
-    background: #f0f0ff; color: #5b5cf7;
-    font-size: 12px; font-weight: 600; margin-bottom: 12px;
+  .nodes-head {
+    text-align: center;
+    margin-bottom: 64px;
   }
-  .nodes-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-  .node-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .nodes-head .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .node-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
   .nc {
-    border-radius: 14px; overflow: hidden;
-    border: 1px solid #ececf4;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #1d1d1f;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .nc:hover {
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   }
   .nc-head {
-    padding: 16px 20px;
+    padding: 20px 24px;
     display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   .nc-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .nc-title { font-size: 14px; font-weight: 700; }
-  .nc-count { margin-left: auto; font-size: 12px; color: #999; }
-  .nc-list { padding: 0 12px 12px; }
+  .nc-title {
+    font-size: 15px; font-weight: 600; color: #f5f5f7;
+  }
+  .nc-count {
+    margin-left: auto; font-size: 13px; color: #6e6e73;
+  }
+  .nc-list { padding: 8px 12px 12px; }
   .nc-item {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 12px; border-radius: 10px;
-    font-size: 13px; color: #555;
-    transition: background 0.1s;
+    font-size: 14px; color: #a1a1a6;
+    transition: background 0.15s;
   }
-  .nc-item:hover { background: #f0f0ff; }
-  .nc-item span:first-child { font-size: 16px; width: 22px; text-align: center; }
-
-  /* ===== Scenarios ===== */
-  .scen-wrap {
-    background: #f8f9fc;
-    padding: 80px 24px;
-  }
-  .scen-inner { max-width: 960px; margin: 0 auto; }
-  .scen-head { text-align: center; margin-bottom: 48px; }
-  .scen-head .tag {
-    display: inline-block; padding: 4px 12px; border-radius: 6px;
-    background: #fff; color: #5b5cf7;
-    font-size: 12px; font-weight: 600; margin-bottom: 12px;
-    border: 1px solid #e0e0ef;
-  }
-  .scen-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-  .scen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .sc {
-    padding: 24px; border-radius: 14px;
-    background: #fff; border: 1px solid #ececf4;
-    transition: all 0.2s;
-  }
-  .sc:hover { border-color: #c4b5fd; transform: translateY(-2px); }
-  .sc-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; margin-bottom: 14px;
-  }
-  .sc h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .sc p { font-size: 12px; color: #888; line-height: 1.5; }
+  .nc-item:hover { background: rgba(255,255,255,0.04); }
+  .nc-item .icon { width: 16px; height: 16px; flex-shrink: 0; }
 
   /* ===== Stats ===== */
+  .stats-section {
+    padding: 100px 24px;
+    background: #000;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
   .stats {
-    display: flex; justify-content: center; gap: 64px;
-    padding: 64px 24px;
-    max-width: 960px; margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    flex-wrap: wrap;
+    max-width: 980px;
+    margin: 0 auto;
   }
   .si { text-align: center; }
   .sv {
-    font-size: 40px; font-weight: 900; letter-spacing: -2px;
-    color: #1a1a2e;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: #f5f5f7;
   }
-  .sv em {
-    font-style: normal;
-    background: linear-gradient(135deg, #5b5cf7, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  .sl {
+    font-size: 17px;
+    color: #86868b;
+    margin-top: 4px;
+    font-weight: 400;
   }
-  .sl { font-size: 13px; color: #999; margin-top: 4px; font-weight: 500; }
+
+  /* ===== Scenarios ===== */
+  .scenarios-section {
+    padding: 120px 24px;
+    background: #000;
+  }
+  .scenarios-head {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .scenarios-head .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .scen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .sc {
+    padding: 36px 28px;
+    border-radius: 20px;
+    background: #1d1d1f;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .sc:hover {
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .sc-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .sc-icon .icon { width: 22px; height: 22px; }
+  .sc h3 {
+    font-size: 17px; font-weight: 600; color: #f5f5f7;
+    margin-bottom: 8px;
+  }
+  .sc p {
+    font-size: 14px; color: #86868b; line-height: 1.6;
+  }
 
   /* ===== CTA ===== */
-  .cta {
-    text-align: center; padding: 80px 24px;
-    background: linear-gradient(180deg, #f8f9fc, #fff);
+  .cta-section {
+    padding: 120px 24px;
+    background: #101010;
+    text-align: center;
   }
-  .cta h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
-  .cta p { color: #888; font-size: 15px; margin-bottom: 32px; }
+  .cta-section h2 {
+    margin-bottom: 12px;
+  }
+  .cta-section p {
+    color: #86868b;
+    font-size: 19px;
+    margin-bottom: 36px;
+    font-weight: 400;
+  }
 
   /* ===== Footer ===== */
   footer {
-    text-align: center; padding: 32px;
-    font-size: 12px; color: #bbb;
-    border-top: 1px solid #eee;
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: #6e6e73;
+    background: #000;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  footer a { color: #2997ff; text-decoration: none; cursor: pointer; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ===== Reduced Motion ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-scale {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .mn { animation: none; opacity: 1; }
+    .ma { animation: none; opacity: 0.6; }
+    html { scroll-behavior: auto; }
   }
 
   /* ===== Responsive ===== */
   @media (max-width: 768px) {
-    .nav { padding: 0 20px; }
+    .nav { left: 8px; right: 8px; top: 8px; padding: 0 20px; }
     .nav-links { display: none; }
-    .hero { padding: 120px 20px 60px; }
-    .m-body { height: 220px; }
+    .hero h1 { font-size: 48px; }
+    .m-body { height: 240px; }
     .m-sidebar { width: 40px; }
     .m-props { display: none; }
     .m-canvas { padding: 20px; }
-    .mn { padding: 8px 12px; min-width: 70px; }
-    .ma { width: 20px; }
+    .mn { padding: 10px 14px; min-width: 70px; }
+    .ma { width: 24px; }
     .steps { grid-template-columns: repeat(2, 1fr); }
     .feat-grid { grid-template-columns: 1fr; }
     .node-cols { grid-template-columns: 1fr; }
     .scen-grid { grid-template-columns: 1fr; }
-    .stats { gap: 32px; flex-wrap: wrap; }
+    .stats { gap: 40px; }
+    .sv { font-size: 40px; }
   }
 </style>
 </head>
 <body>
 
 <!-- Nav -->
-<div class="nav">
-  <div class="nav-logo">Flow<span>Desk</span></div>
+<nav class="nav">
+  <div class="nav-logo">FlowDesk</div>
   <div class="nav-links">
     <a href="#how">工作方式</a>
     <a href="#features">特性</a>
@@ -390,282 +646,367 @@
     <a href="#scenarios">场景</a>
     <a href="#start" class="nav-cta">下载</a>
   </div>
-</div>
+</nav>
 
 <!-- Hero -->
-<div class="hero">
-  <div class="hero-tag">&#9889; 桌面端 &middot; 零代码 &middot; 可视化编排</div>
-  <h1>自动化工作流<br><em>可视化编排</em></h1>
-  <p class="hero-sub">
-    拖拽节点、连线组合，编排文件处理、网络请求、定时任务等自动化流程。运行在桌面，无需编写代码。
-  </p>
-  <div class="hero-btns">
-    <button class="btn btn-fill" onclick="alert('请从项目发布页下载安装包')">&#11015; 下载安装包</button>
-    <a class="btn btn-outline" href="#how">了解更多 &rarr;</a>
+<section class="hero section-dark">
+  <div class="reveal">
+    <p class="hero-eyebrow">桌面端 · 零代码 · 可视化编排</p>
+    <h1><span class="gradient-text">FlowDesk</span></h1>
+    <p class="hero-sub">
+      拖拽节点、连线组合，编排文件处理、网络请求、定时任务等自动化流程。<br>运行在桌面，无需编写代码。
+    </p>
+    <div class="hero-btns">
+      <a class="btn btn-blue" href="#start">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载 FlowDesk
+      </a>
+      <a class="btn btn-ghost" href="#how">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        了解更多
+      </a>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- Mockup -->
-<div class="mockup-section">
-  <div class="mockup">
-    <div class="m-bar">
-      <div class="m-dot r"></div>
-      <div class="m-dot y"></div>
-      <div class="m-dot g"></div>
-      <div class="m-title">FlowDesk</div>
-    </div>
-    <div class="m-body">
-      <div class="m-sidebar">
-        <div class="m-si on">&#9673;</div>
-        <div class="m-si">&#9998;</div>
-        <div class="m-si">&#128203;</div>
-        <div class="m-si">&#9881;</div>
+<section class="mockup-section section">
+  <div class="mockup-container reveal-scale">
+    <div class="mockup">
+      <div class="m-bar">
+        <div class="m-dot r"></div>
+        <div class="m-dot y"></div>
+        <div class="m-dot g"></div>
+        <div class="m-title">FlowDesk</div>
       </div>
-      <div class="m-canvas">
-        <div class="m-nodes">
-          <div class="mn t">
-            <span class="mn-icon">&#9200;</span>
-            <span class="mn-label">定时触发</span>
+      <div class="m-body">
+        <div class="m-sidebar">
+          <div class="m-si on">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           </div>
-          <div class="ma"></div>
-          <div class="mn a">
-            <span class="mn-icon">&#127760;</span>
-            <span class="mn-label">HTTP 请求</span>
+          <div class="m-si">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </div>
-          <div class="ma"></div>
-          <div class="mn l">
-            <span class="mn-icon">&#128257;</span>
-            <span class="mn-label">条件判断</span>
+          <div class="m-si">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
           </div>
-          <div class="ma"></div>
-          <div class="mn ok">
-            <span class="mn-icon">&#128276;</span>
-            <span class="mn-label">发送通知</span>
+          <div class="m-si">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </div>
         </div>
-      </div>
-      <div class="m-props">
-        <div class="m-props-t">节点属性</div>
-        <div class="m-pi">
-          <div class="m-pi-l">表达式</div>
-          <div class="m-pi-v">0 9 * * *</div>
+        <div class="m-canvas">
+          <div class="m-nodes">
+            <div class="mn t">
+              <span class="mn-icon">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+              <span class="mn-label">定时触发</span>
+            </div>
+            <div class="ma"></div>
+            <div class="mn a">
+              <span class="mn-icon">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </span>
+              <span class="mn-label">HTTP 请求</span>
+            </div>
+            <div class="ma"></div>
+            <div class="mn l">
+              <span class="mn-icon">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </span>
+              <span class="mn-label">条件判断</span>
+            </div>
+            <div class="ma"></div>
+            <div class="mn ok">
+              <span class="mn-icon">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </span>
+              <span class="mn-label">发送通知</span>
+            </div>
+          </div>
         </div>
-        <div class="m-pi">
-          <div class="m-pi-l">时区</div>
-          <div class="m-pi-v">Asia/Shanghai</div>
-        </div>
-        <div class="m-pi">
-          <div class="m-pi-l">状态</div>
-          <div class="m-pi-v" style="color:#34d399;">&#9679; 就绪</div>
+        <div class="m-props">
+          <div class="m-props-t">节点属性</div>
+          <div class="m-pi">
+            <div class="m-pi-l">表达式</div>
+            <div class="m-pi-v">0 9 * * *</div>
+          </div>
+          <div class="m-pi">
+            <div class="m-pi-l">时区</div>
+            <div class="m-pi-v">Asia/Shanghai</div>
+          </div>
+          <div class="m-pi">
+            <div class="m-pi-l">状态</div>
+            <div class="m-pi-v" style="color:#30d158;">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#30d158;fill:none;stroke-width:2;"><circle cx="12" cy="12" r="5"/></svg>
+              就绪
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- Steps -->
-<div class="steps-wrap" id="how">
-  <div class="steps-head">
-    <div class="tag">工作方式</div>
-    <h2>四步完成自动化</h2>
+<!-- How it works -->
+<section class="how-section section" id="how">
+  <div class="how-head reveal">
+    <p class="eyebrow">工作方式</p>
+    <h2 class="headline-sm" style="color:#f5f5f7;">四步完成自动化</h2>
   </div>
   <div class="steps">
-    <div class="step">
-      <div class="step-n">1</div>
-      <div class="step-icon">&#127912;</div>
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <div class="step-icon">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
       <h3>拖入节点</h3>
       <p>从左侧面板拖拽触发器、动作、逻辑节点到画布</p>
     </div>
-    <div class="step">
-      <div class="step-n">2</div>
-      <div class="step-icon">&#128279;</div>
+    <div class="step reveal">
+      <div class="step-num">2</div>
+      <div class="step-icon">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </div>
       <h3>连线组合</h3>
       <p>将节点输出端口连接到下一个节点的输入端口</p>
     </div>
-    <div class="step">
-      <div class="step-n">3</div>
-      <div class="step-icon">&#9881;</div>
+    <div class="step reveal">
+      <div class="step-num">3</div>
+      <div class="step-icon">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
       <h3>配置参数</h3>
       <p>在右侧面板设置每个节点的参数和条件</p>
     </div>
-    <div class="step">
-      <div class="step-n">4</div>
-      <div class="step-icon">&#9654;</div>
+    <div class="step reveal">
+      <div class="step-num">4</div>
+      <div class="step-icon">
+        <svg class="icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
       <h3>运行监控</h3>
       <p>点击运行，实时查看每个节点的执行状态</p>
     </div>
   </div>
-</div>
+</section>
 
 <!-- Features -->
-<div class="feat-wrap" id="features">
-  <div class="feat-inner">
-    <div class="feat-head">
-      <div class="tag">核心特性</div>
-      <h2>为效率而设计</h2>
+<section class="features-section section" id="features">
+  <div class="features-head reveal">
+    <p class="eyebrow">核心特性</p>
+    <h2 class="headline-sm" style="color:#f5f5f7;">为效率而设计</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat reveal">
+      <div class="feat-icon" style="background:rgba(41,151,255,0.12);color:#2997ff;">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      </div>
+      <h3>可视化画布</h3>
+      <p>拖拽式编辑器，支持框选、复制粘贴、缩放平移，操作直觉自然。</p>
     </div>
-    <div class="feat-grid">
-      <div class="feat">
-        <div class="feat-icon" style="background:#f0f0ff;color:#5b5cf7;">&#128300;</div>
-        <h3>可视化画布</h3>
-        <p>拖拽式编辑器，支持框选、复制粘贴、缩放平移，操作直觉自然。</p>
+    <div class="feat reveal">
+      <div class="feat-icon" style="background:rgba(41,151,255,0.12);color:#2997ff;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       </div>
-      <div class="feat">
-        <div class="feat-icon" style="background:#f0f0ff;color:#5b5cf7;">&#9889;</div>
-        <h3>多种触发方式</h3>
-        <p>手动执行、Cron 定时、文件监听、全局快捷键，按需选择。</p>
+      <h3>多种触发方式</h3>
+      <p>手动执行、Cron 定时、文件监听、全局快捷键，按需选择。</p>
+    </div>
+    <div class="feat reveal">
+      <div class="feat-icon" style="background:rgba(48,209,88,0.12);color:#30d158;">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
-      <div class="feat">
-        <div class="feat-icon" style="background:#ecfdf5;color:#10b981;">&#128200;</div>
-        <h3>实时状态追踪</h3>
-        <p>节点执行时实时高亮状态，侧边栏查看输入输出详情。</p>
+      <h3>实时状态追踪</h3>
+      <p>节点执行时实时高亮状态，侧边栏查看输入输出详情。</p>
+    </div>
+    <div class="feat reveal">
+      <div class="feat-icon" style="background:rgba(255,159,10,0.12);color:#ff9f0a;">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
-      <div class="feat">
-        <div class="feat-icon" style="background:#fffbeb;color:#f59e0b;">&#128257;</div>
-        <h3>逻辑控制</h3>
-        <p>条件分支、循环遍历、变量设置、Try-Catch、子工作流。</p>
+      <h3>逻辑控制</h3>
+      <p>条件分支、循环遍历、变量设置、Try-Catch、子工作流。</p>
+    </div>
+    <div class="feat reveal">
+      <div class="feat-icon" style="background:rgba(255,69,58,0.12);color:#ff453a;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
       </div>
-      <div class="feat">
-        <div class="feat-icon" style="background:#fef2f2;color:#ef4444;">&#128203;</div>
-        <h3>模板系统</h3>
-        <p>内置常用模板一键创建；支持导入导出 JSON，方便分享备份。</p>
+      <h3>模板系统</h3>
+      <p>内置常用模板一键创建；支持导入导出 JSON，方便分享备份。</p>
+    </div>
+    <div class="feat reveal">
+      <div class="feat-icon" style="background:rgba(168,85,247,0.12);color:#a855f7;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       </div>
-      <div class="feat">
-        <div class="feat-icon" style="background:#faf5ff;color:#8b5cf6;">&#128276;</div>
-        <h3>通知与日志</h3>
-        <p>执行完成自动推送通知，完整历史可追溯，按状态筛选。</p>
-      </div>
+      <h3>通知与日志</h3>
+      <p>执行完成自动推送通知，完整历史可追溯，按状态筛选。</p>
     </div>
   </div>
-</div>
+</section>
 
 <!-- Nodes -->
-<div class="nodes-wrap" id="nodes">
-  <div class="nodes-head">
-    <div class="tag">节点类型</div>
-    <h2>18+ 内置节点</h2>
+<section class="nodes-section section" id="nodes">
+  <div class="nodes-head reveal">
+    <p class="eyebrow">节点类型</p>
+    <h2 class="headline-sm" style="color:#f5f5f7;">18+ 内置节点</h2>
   </div>
   <div class="node-cols">
-    <div class="nc">
-      <div class="nc-head" style="background:#f5f3ff;">
-        <div class="nc-dot" style="background:#8b5cf6;"></div>
+    <div class="nc reveal">
+      <div class="nc-head">
+        <div class="nc-dot" style="background:#a855f7;"></div>
         <div class="nc-title">触发器</div>
-        <div class="nc-count">4 种</div>
+        <div class="nc-count">5 种</div>
       </div>
       <div class="nc-list">
-        <div class="nc-item"><span>&#9654;</span> 手动触发</div>
-        <div class="nc-item"><span>&#9200;</span> Cron 定时</div>
-        <div class="nc-item"><span>&#128065;</span> 文件监听</div>
-        <div class="nc-item"><span>&#9000;</span> 快捷键触发</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> 手动触发</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Cron 定时</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 文件监听</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01"/></svg> 快捷键触发</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 启动触发</div>
       </div>
     </div>
-    <div class="nc">
-      <div class="nc-head" style="background:#eef2ff;">
-        <div class="nc-dot" style="background:#5b5cf7;"></div>
+    <div class="nc reveal">
+      <div class="nc-head">
+        <div class="nc-dot" style="background:#2997ff;"></div>
         <div class="nc-title">动作</div>
-        <div class="nc-count">8 种</div>
+        <div class="nc-count">10 种</div>
       </div>
       <div class="nc-list">
-        <div class="nc-item"><span>&#127760;</span> HTTP 请求</div>
-        <div class="nc-item"><span>&#128276;</span> 系统通知</div>
-        <div class="nc-item"><span>&#128196;</span> 文件操作</div>
-        <div class="nc-item"><span>&#128187;</span> 执行命令</div>
-        <div class="nc-item"><span>&#128232;</span> 发送邮件</div>
-        <div class="nc-item"><span>&#128451;</span> 数据库查询</div>
-        <div class="nc-item"><span>&#128190;</span> 剪贴板</div>
-        <div class="nc-item"><span>&#9201;</span> 延时等待</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> HTTP 请求</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> 系统通知</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> 文件操作</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> 执行命令</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> 发送邮件</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> 数据库查询</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> 剪贴板</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 延时等待</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 数据转换</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> WiFi 登录</div>
       </div>
     </div>
-    <div class="nc">
-      <div class="nc-head" style="background:#fffbeb;">
-        <div class="nc-dot" style="background:#f59e0b;"></div>
+    <div class="nc reveal">
+      <div class="nc-head">
+        <div class="nc-dot" style="background:#ff9f0a;"></div>
         <div class="nc-title">逻辑</div>
         <div class="nc-count">6 种</div>
       </div>
       <div class="nc-list">
-        <div class="nc-item"><span>&#128257;</span> 条件判断</div>
-        <div class="nc-item"><span>&#128258;</span> 循环遍历</div>
-        <div class="nc-item"><span>&#128221;</span> 变量设置</div>
-        <div class="nc-item"><span>&#128260;</span> 数据转换</div>
-        <div class="nc-item"><span>&#128736;</span> Try-Catch</div>
-        <div class="nc-item"><span>&#128260;</span> 子工作流</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 条件判断</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> 循环遍历</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 变量设置</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg> 数据转换</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Try-Catch</div>
+        <div class="nc-item"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> 子工作流</div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Scenarios -->
-<div class="scen-wrap" id="scenarios">
-  <div class="scen-inner">
-    <div class="scen-head">
-      <div class="tag">应用场景</div>
-      <h2>解决真实问题</h2>
-    </div>
-    <div class="scen-grid">
-      <div class="sc">
-        <div class="sc-icon" style="background:#f5f3ff;color:#8b5cf6;">&#128193;</div>
-        <h3>文件自动归档</h3>
-        <p>监听文件夹，新文件自动分类移动，发送通知告知结果。</p>
-      </div>
-      <div class="sc">
-        <div class="sc-icon" style="background:#eef2ff;color:#5b5cf7;">&#128200;</div>
-        <h3>接口健康监控</h3>
-        <p>定时请求 API，异常时自动邮件告警，防患于未然。</p>
-      </div>
-      <div class="sc">
-        <div class="sc-icon" style="background:#ecfdf5;color:#10b981;">&#128202;</div>
-        <h3>批量数据处理</h3>
-        <p>数据库查询 → 循环遍历 → 格式转换 → 写回结果。</p>
-      </div>
-      <div class="sc">
-        <div class="sc-icon" style="background:#fffbeb;color:#f59e0b;">&#128640;</div>
-        <h3>一键部署流程</h3>
-        <p>拉代码、构建、上传、重启，编排为工作流一键触发。</p>
-      </div>
-      <div class="sc">
-        <div class="sc-icon" style="background:#fef2f2;color:#ef4444;">&#128465;</div>
-        <h3>定期清理日志</h3>
-        <p>每天凌晨自动清理过期日志，释放磁盘空间。</p>
-      </div>
-      <div class="sc">
-        <div class="sc-icon" style="background:#faf5ff;color:#8b5cf6;">&#128276;</div>
-        <h3>定时消息推送</h3>
-        <p>按 Cron 表达式定时发送邮件或系统通知。</p>
-      </div>
-    </div>
-  </div>
-</div>
+</section>
 
 <!-- Stats -->
-<div class="stats">
-  <div class="si">
-    <div class="sv"><em>18+</em></div>
-    <div class="sl">内置节点</div>
+<section class="stats-section section">
+  <div class="stats reveal">
+    <div class="si">
+      <div class="sv"><span class="gradient-text">18+</span></div>
+      <div class="sl">内置节点</div>
+    </div>
+    <div class="si">
+      <div class="sv"><span class="gradient-text">5</span></div>
+      <div class="sl">触发方式</div>
+    </div>
+    <div class="si">
+      <div class="sv"><span class="gradient-text">~80</span><span style="font-size:28px;color:#86868b;">MB</span></div>
+      <div class="sl">安装体积</div>
+    </div>
+    <div class="si">
+      <div class="sv"><span class="gradient-text">0</span></div>
+      <div class="sl">代码量</div>
+    </div>
   </div>
-  <div class="si">
-    <div class="sv"><em>4</em></div>
-    <div class="sl">触发方式</div>
+</section>
+
+<!-- Scenarios -->
+<section class="scenarios-section section" id="scenarios">
+  <div class="scenarios-head reveal">
+    <p class="eyebrow">应用场景</p>
+    <h2 class="headline-sm" style="color:#f5f5f7;">解决真实问题</h2>
   </div>
-  <div class="si">
-    <div class="sv"><em>~80</em>MB</div>
-    <div class="sl">安装体积</div>
+  <div class="scen-grid">
+    <div class="sc reveal">
+      <div class="sc-icon" style="background:rgba(168,85,247,0.12);color:#a855f7;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <h3>文件自动归档</h3>
+      <p>监听文件夹，新文件自动分类移动，发送通知告知结果。</p>
+    </div>
+    <div class="sc reveal">
+      <div class="sc-icon" style="background:rgba(41,151,255,0.12);color:#2997ff;">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3>接口健康监控</h3>
+      <p>定时请求 API，异常时自动邮件告警，防患于未然。</p>
+    </div>
+    <div class="sc reveal">
+      <div class="sc-icon" style="background:rgba(48,209,88,0.12);color:#30d158;">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <h3>批量数据处理</h3>
+      <p>数据库查询 → 循环遍历 → 格式转换 → 写回结果。</p>
+    </div>
+    <div class="sc reveal">
+      <div class="sc-icon" style="background:rgba(255,159,10,0.12);color:#ff9f0a;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </div>
+      <h3>一键部署流程</h3>
+      <p>拉代码、构建、上传、重启，编排为工作流一键触发。</p>
+    </div>
+    <div class="sc reveal">
+      <div class="sc-icon" style="background:rgba(255,69,58,0.12);color:#ff453a;">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <h3>定期清理日志</h3>
+      <p>每天凌晨自动清理过期日志，释放磁盘空间。</p>
+    </div>
+    <div class="sc reveal">
+      <div class="sc-icon" style="background:rgba(168,85,247,0.12);color:#a855f7;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h3>定时消息推送</h3>
+      <p>按 Cron 表达式定时发送邮件或系统通知。</p>
+    </div>
   </div>
-  <div class="si">
-    <div class="sv"><em>0</em></div>
-    <div class="sl">代码量</div>
-  </div>
-</div>
+</section>
 
 <!-- CTA -->
-<div class="cta" id="start">
-  <h2>开始你的第一个工作流</h2>
-  <p>下载安装，选择模板，三分钟完成第一个自动化流程</p>
-  <button class="btn btn-fill" onclick="alert('请从项目发布页下载安装包')">&#11015; 下载 FlowDesk</button>
-</div>
+<section class="cta-section section" id="start">
+  <div class="reveal">
+    <h2 class="headline-sm" style="color:#f5f5f7;">开始你的第一个工作流</h2>
+    <p>下载安装，选择模板，三分钟完成第一个自动化流程</p>
+    <a class="btn btn-blue" href="javascript:alert('请从项目发布页下载安装包')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      下载 FlowDesk
+    </a>
+  </div>
+</section>
 
 <footer>
-  FlowDesk &copy; 2026 &middot; Built with Electron + React + TypeScript
+  FlowDesk &copy; 2026 · Built with Electron + React + TypeScript
 </footer>
+
+<script>
+  // Scroll-triggered reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  document.querySelectorAll('.reveal, .reveal-scale').forEach(el => {
+    observer.observe(el);
+  });
+</script>
 
 </body>
 </html>

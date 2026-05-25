@@ -1,4 +1,5 @@
 import { ipcMain, BrowserWindow, Notification } from 'electron';
+import path from 'node:path';
 import { getWorkflowById, incrementExecutionCount } from '../db/workflow-repo';
 import { executeWorkflow, cancelExecution } from '../engine/executor';
 import { saveExecutionLog, getExecutionLogs, getAllExecutionHistory, getExecutionLogById } from '../db/execution-log-repo';
@@ -29,7 +30,7 @@ export function registerExecutionIPC(): void {
       const statusText = log.status === 'success' ? '执行完成' : log.status === 'failed' ? '执行失败' : '已取消';
       const title = `工作流${statusText}`;
       const body = workflow.name;
-      const notification = new Notification({ title, body });
+      const notification = new Notification({ title, body, icon: path.join(__dirname, '../../resources/icon.png') });
       notification.show();
     }
 

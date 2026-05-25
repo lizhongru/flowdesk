@@ -6,8 +6,9 @@ import { saveExecutionLog } from './db/execution-log-repo';
 
 let tray: Tray | null = null;
 
+const iconPath = path.join(__dirname, '../../resources/icon.png');
+
 function getIcon(): Electron.NativeImage {
-  const iconPath = path.join(__dirname, '../../resources/icon.png');
   const image = nativeImage.createFromPath(iconPath);
   const resized = image.resize({ width: 16, height: 16 });
   // Mac 菜单栏使用模板图标，自动适配深色/浅色模式
@@ -30,10 +31,10 @@ function buildContextMenu(getMainWindow: () => BrowserWindow | null): Electron.M
             saveExecutionLog(log);
             if (w.notifyOnComplete && Notification.isSupported()) {
               const statusText = log.status === 'success' ? '执行完成' : log.status === 'failed' ? '执行失败' : '已取消';
-              new Notification({ title: `工作流${statusText}`, body: w.name }).show();
+              new Notification({ title: `工作流${statusText}`, body: w.name, icon: iconPath }).show();
             }
           } catch (err: any) {
-            new Notification({ title: '执行失败', body: err.message }).show();
+            new Notification({ title: '执行失败', body: err.message, icon: iconPath }).show();
           }
         },
       }))

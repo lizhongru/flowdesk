@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { X, Square, ChevronDown, ChevronRight, Loader2, FileText } from 'lucide-react';
+import { X, Square, ChevronDown, ChevronRight, Loader2, FileText, Copy, Check } from 'lucide-react';
 import { useExecutionStore } from '../../stores/execution-store';
 
 interface LogPanelProps {
@@ -17,6 +17,7 @@ export default function LogPanel({ workflowId, onClose }: LogPanelProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
   const cancellingRef = useRef(false);
+  const [copied, setCopied] = useState(false);
 
   // 只看当前工作流的执行历史
   const historyList = executionHistory
@@ -112,6 +113,39 @@ export default function LogPanel({ workflowId, onClose }: LogPanelProps) {
     return d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   };
 
+  const copyLog = async () => {
+    if (!currentExecution) return;
+    const lines: string[] = [];
+    const statusText = statusLabels[currentExecution.status] || currentExecution.status;
+    lines.push(`状态: ${statusText}  触发: ${triggerLabels[currentExecution.triggerType] || currentExecution.triggerType}`);
+    lines.push('');
+    for (const [key, status] of Object.entries(currentNodeStatuses)) {
+      const hashIdx = key.lastIndexOf('#');
+      const isIter = hashIdx > 0 && /\d+$/.test(key);
+      const displayId = isIter ? key.slice(0, hashIdx) : key;
+      const iterLabel = isIter ? ` [${key.slice(hashIdx + 1)}]` : '';
+      const label = `${displayId}${iterLabel}`;
+      const s = statusLabels[status as string] || status;
+      const error = currentNodeErrors[key];
+      const output = currentNodeOutputs[key];
+      lines.push(`[${s}] ${label}`);
+      if (error) lines.push(`  Error: ${error}`);
+      if (output !== undefined) lines.push(`  ${formatOutput(output)}`);
+    }
+    if (currentNodeLogs.length > 0) {
+      lines.push('');
+      lines.push('--- 日志 ---');
+      for (const log of currentNodeLogs) {
+        lines.push(`[${log.level}] ${log.message}`);
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch { /* ignore */ }
+  };
+
   return (
     <div
       className="h-64 flex flex-col shrink-0"
@@ -163,6 +197,19 @@ export default function LogPanel({ workflowId, onClose }: LogPanelProps) {
           )}
         </div>
         <div className="flex items-center gap-1">
+          {currentExecution && (
+            <button
+              onClick={copyLog}
+              className="w-6 h-6 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
+              title="复制日志"
+            >
+              {copied ? (
+                <Check size={11} style={{ color: 'var(--success)' }} />
+              ) : (
+                <Copy size={11} style={{ color: 'var(--text-muted)' }} />
+              )}
+            </button>
+          )}
           {(currentExecution?.status === 'running' || cancelling) && (
             <button
               onClick={() => {

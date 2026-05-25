@@ -1,6 +1,10 @@
 import { app, BrowserWindow, shell, ipcMain, globalShortcut } from 'electron';
 import path from 'node:path';
 import { initDatabase } from './db';
+
+// 设置应用名称和 Windows 通知来源标识
+app.name = 'FlowDesk';
+app.setAppUserModelId('FlowDesk');
 import { registerAllIPC } from './ipc';
 import { setMainWindowGetter } from './ipc/execution';
 import { restoreSchedulers, destroyAllSchedulers } from './engine/scheduler';
