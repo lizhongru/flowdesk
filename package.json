@@ -12,6 +12,7 @@
     "clean": "node -e \"try{require('fs').rmSync('release',{recursive:true,force:true})}catch{}\"",
     "package": "npm run clean && electron-vite build && electron-builder",
     "package:win": "npm run clean && electron-vite build && electron-builder --win",
+    "package:mac": "npm run clean && electron-vite build && electron-builder --mac",
     "lint": "eslint src --ext .ts,.tsx",
     "pretest": "npm rebuild better-sqlite3",
     "test": "vitest run",

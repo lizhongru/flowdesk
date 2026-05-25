@@ -9,7 +9,12 @@ let tray: Tray | null = null;
 function getIcon(): Electron.NativeImage {
   const iconPath = path.join(__dirname, '../../resources/icon.png');
   const image = nativeImage.createFromPath(iconPath);
-  return image.resize({ width: 16, height: 16 });
+  const resized = image.resize({ width: 16, height: 16 });
+  // Mac 菜单栏使用模板图标，自动适配深色/浅色模式
+  if (process.platform === 'darwin') {
+    resized.setTemplateImage(true);
+  }
+  return resized;
 }
 
 function buildContextMenu(getMainWindow: () => BrowserWindow | null): Electron.Menu {
